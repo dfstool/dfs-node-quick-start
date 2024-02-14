@@ -1,0 +1,14 @@
+#!/bin/bash
+
+log_line=${1:-40}
+
+rpc=`awk '/http-server-address/{print $3}' ./config/config.ini` 
+#cleos -u $rpc get table loglogloglog loglogloglog logs -r -l $log_line 
+cleos -u $rpc get table loglogloglog loglogloglog logs -r -l $log_line | awk -F: '/id/{getline; printf("%s ", $2); getline; printf("%s ", $2); getline; printf("%s ", $2); getline; printf("%s ", $2); getline; printf("%s:%s:%s\n", $2, $3, $4)}' | sed -n 's/[",]//gp' | awk '{printf("%s\t%s\t%s -> %s\t%.4f -> %.4f\n", $7, $1, $4, $6, $3, $5)}' > /tmp/swaplog
+
+clear
+echo "-------------------------------------------------------------------------------- "
+echo -e "       Time               Account       in      out     in          out   "
+echo "--------------------------------------------------------------------------------"
+cat /tmp/swaplog
+echo "-------------------------------------------------------------------------------- "
